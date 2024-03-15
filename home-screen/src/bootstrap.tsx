@@ -1,7 +1,7 @@
 import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "normalize.css";
-import "./assets/global.css";
+import "./global.css";
 
 import App from "./App";
 const root = ReactDOM.createRoot(document.getElementById("root"));

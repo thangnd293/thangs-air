@@ -1,20 +1,15 @@
-import React, { useState } from "react";
-import Providers from "./components/Providers";
-import MenuBar from "./components/MenuBar";
-import Header from "./components/Header";
+import React from "react";
 import styled from "styled-components";
+import MenuBar from "./components/MenuBar";
+import Desktop from "./components/Desktop";
+import Providers from "./components/Providers";
 
 const App = () => {
-  const [count, setCount] = useState(1);
-
   return (
     <Providers>
       <Container>
-        <Header />
-        <Content id="home-view">
-          <button onClick={() => setCount(count + 1)}>Count: {count}</button>
-          <MenuBar />
-        </Content>
+        <MenuBar />
+        <Desktop />
       </Container>
     </Providers>
   );
@@ -28,9 +23,4 @@ const Container = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-`;
-
-const Content = styled.div`
-  flex: 1;
-  background-color: pink;
 `;
