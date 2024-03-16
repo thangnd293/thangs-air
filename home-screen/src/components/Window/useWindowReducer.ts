@@ -5,6 +5,7 @@ import { Props } from "react-rnd";
 export enum WindowActionKind {
   SET_SIZE,
   SET_POSITION,
+  SET_SIZE_AND_POSITION,
   EXIT_FULLSCREEN,
   ENTER_FULLSCREEN,
 }
@@ -33,6 +34,13 @@ type WindowActions =
     }
   | {
       type: WindowActionKind.ENTER_FULLSCREEN;
+    }
+  | {
+      type: WindowActionKind.SET_SIZE_AND_POSITION;
+      payload: {
+        size: Props["size"];
+        position: Props["position"];
+      };
     };
 
 function reducer(state: WindowState, action: WindowActions): WindowState {
@@ -53,6 +61,13 @@ function reducer(state: WindowState, action: WindowActions): WindowState {
           x: action.payload.x,
           y: action.payload.y,
         },
+      };
+
+    case WindowActionKind.SET_SIZE_AND_POSITION:
+      return {
+        ...state,
+        size: { ...action.payload.size },
+        position: { ...action.payload.position },
       };
 
     case WindowActionKind.EXIT_FULLSCREEN:
@@ -76,6 +91,7 @@ function reducer(state: WindowState, action: WindowActions): WindowState {
           y: 0,
         },
       };
+
     default:
       return state;
   }

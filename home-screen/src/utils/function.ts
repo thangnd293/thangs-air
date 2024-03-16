@@ -1,3 +1,4 @@
+import { images } from "@/components/Images";
 import html2canvas, { Options } from "html2canvas";
 
 export const takeScreenShot = (
@@ -26,5 +27,8 @@ export const takeScreenShot = (
 
       return base64Image;
     })
-    .catch(console.log);
+    .catch((e) => {
+      console.error(e);
+      return images.youtubeScreenshot;
+    });
 };
