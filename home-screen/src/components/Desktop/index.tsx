@@ -8,7 +8,6 @@ import styled from "styled-components";
 const Desktop = () => {
   const openAppList = useDesktopStore((state) => state.openAppList);
 
-  console.log();
   return (
     <DesktopContainer id="desktop">
       {openAppList.map((app) => (
