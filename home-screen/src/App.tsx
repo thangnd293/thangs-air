@@ -1,17 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import MenuBar from "./components/MenuBar";
 import Desktop from "./components/Desktop";
-import Providers from "./components/Providers";
+import MenuBar from "./components/MenuBar";
 
 const App = () => {
   return (
-    <Providers>
-      <Container>
-        <MenuBar />
-        <Desktop />
-      </Container>
-    </Providers>
+    <Container>
+      <MenuBar />
+      <Desktop />
+    </Container>
   );
 };
 

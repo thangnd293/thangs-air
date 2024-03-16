@@ -12,9 +12,21 @@ export interface App {
   isCollapsed?: boolean;
 }
 
+export interface CollapseApp extends App {
+  screenshot: Promise<string>;
+}
+
 const Notes = () => {
   console.log("Rendering Notes");
-  return <div>Notes</div>;
+  return (
+    <div>
+      <img
+        style={{ width: "100px", height: "100px" }}
+        src="https://gamek.mediacdn.vn/thumb_w/640/133514250583805952/2020/7/7/photo-1-1594098002042331340775.jpg"
+        alt=""
+      />
+    </div>
+  );
 };
 
 const Reminder = () => {
@@ -26,11 +38,11 @@ const Reminder = () => {
 interface DesktopState {
   appList: App[];
   openAppList: App[];
-  collapseList: App[];
+  collapseList: CollapseApp[];
   currentApp: App | null;
   openApp: (id: string) => void;
   closeApp: (id: string) => void;
-  collapseApp: (app: App) => void;
+  collapseApp: (app: CollapseApp) => void;
 }
 
 export const useDesktopStore = create<DesktopState>((set, get) => ({
@@ -38,13 +50,13 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
     {
       id: "1",
       name: "Notes",
-      shortcut: images.notes,
+      shortcut: images.finder,
       component: <Notes />,
     },
     {
       id: "2",
       name: "Reminder",
-      shortcut: images.reminder,
+      shortcut: images.reminders,
       component: <Reminder />,
     },
   ],
@@ -52,7 +64,7 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
   collapseList: [],
   currentApp: null,
   openApp: (id: string) => {
-    const { appList, currentApp, collapseList } = get();
+    const { appList, currentApp, collapseList, openAppList } = get();
 
     // If the app is already open, don't open it again
     if (currentApp?.id === id) return;
@@ -68,7 +80,7 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
           app.id === id ? { ...app, isOpen: true } : app
         ),
       });
-      set({ openAppList: [...get().openAppList, app] });
+      set({ openAppList: [...openAppList, app] });
     }
 
     // If the app is open, bring it to the front
@@ -78,9 +90,11 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
 
     // If the app is collapsed, remove it from the collapsed list
     if (app && app.isCollapsed) {
-      set({ collapseList: get().collapseList.filter((app) => app.id !== id) });
+      set({ collapseList: collapseList.filter((app) => app.id !== id) });
       set({
-        openAppList: [...get().openAppList, { ...app, isCollapsed: false }],
+        openAppList: openAppList.map((app) =>
+          app.id === id ? { ...app, isCollapsed: true } : app
+        ),
       });
     }
   },
@@ -103,7 +117,7 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       set({ currentApp: null });
     }
   },
-  collapseApp: (app: App) => {
+  collapseApp: (app: CollapseApp) => {
     const { openAppList, collapseList, currentApp } = get();
 
     const appIndex = openAppList.findIndex((a) => a.id === app.id);
