@@ -1,7 +1,7 @@
 import { App, useDesktopStore } from "@/stores/desktop";
 import React from "react";
 import styled from "styled-components";
-import { publicAppUnCollapsed } from "../Window/utils";
+import { publicAppUnMinimized } from "../Window/utils";
 
 interface AppIconProps {
   app: App;
@@ -10,7 +10,7 @@ const AppIcon: React.FC<AppIconProps> = ({ app }) => {
   const openApp = useDesktopStore((state) => state.openApp);
 
   const onOpenApp = () => {
-    publicAppUnCollapsed(app);
+    publicAppUnMinimized(app);
 
     openApp(app.id);
   };

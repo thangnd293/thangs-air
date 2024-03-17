@@ -3,11 +3,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import styled from "styled-components";
 import AppIcon from "./AppIcon";
-import CollapseAppIcon from "./CollapseAppIcon";
+import CollapseAppIcon from "./MinimizedAppIcon";
 
 const Dock = () => {
   const appList = useDesktopStore((state) => state.appList);
-  const collapseList = useDesktopStore((state) => state.collapseList);
+  const minimizeList = useDesktopStore((state) => state.minimizeList);
 
   return (
     <DockContainer id="dock">
@@ -16,7 +16,7 @@ const Dock = () => {
           <AppIcon key={app.id} app={app} />
         ))}
 
-        {collapseList.length > 0 && (
+        {minimizeList.length > 0 && (
           <Divider
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { delay: 0.3 } }}
@@ -26,8 +26,8 @@ const Dock = () => {
           />
         )}
 
-        {collapseList.map((app) => (
-          <CollapseAppIcon key={app.id + "collapsed"} app={app} />
+        {minimizeList.map((app) => (
+          <CollapseAppIcon key={app.id + "minimized"} app={app} />
         ))}
       </AnimatePresence>
     </DockContainer>

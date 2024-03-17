@@ -3,16 +3,16 @@ import { App, useDesktopStore } from "@/stores/desktop";
 import { takeScreenShot } from "@/utils/function";
 import React, { useEffect, useRef } from "react";
 import { Rnd, RndDragCallback, RndResizeCallback } from "react-rnd";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useShallow } from "zustand/react/shallow";
+import WindowActions from "./WindowActions";
 import useWindowReducer, { WindowActionKind } from "./useWindowReducer";
 import {
+  addZoomInEffect,
   addZoomOutEffect,
   preventAnimate,
-  addZoomInEffect,
-  preventDrag,
-  subscribeAppUnCollapsed,
-  unsubscribeAppUnCollapsed,
+  subscribeAppUnMinimized,
+  unsubscribeAppUnMinimized,
 } from "./utils";
 
 interface WindowProps {
@@ -21,12 +21,12 @@ interface WindowProps {
 }
 
 const Window: React.FC<WindowProps> = ({ app, children }) => {
-  const { currentApp, openApp, closeApp, collapseApp } = useDesktopStore(
+  const { currentApp, openApp, closeApp, minimizeApp } = useDesktopStore(
     useShallow((state) => ({
       currentApp: state.currentApp,
       openApp: state.openApp,
       closeApp: state.closeApp,
-      collapseApp: state.collapseApp,
+      minimizeApp: state.minimizeApp,
     }))
   );
 
@@ -37,7 +37,7 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
   const prevSize = useRef(state.size);
   const prevPosition = useRef(state.position);
 
-  useListenUnCollapsed(app, rndRef);
+  useListenUnMinimized(app, rndRef);
 
   const onResize: RndResizeCallback = (_, __, ref, ___, position) => {
     preventAnimate(ref);
@@ -83,7 +83,6 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
       });
     } else {
       storePrevSizeAndPosition();
-
       dispatch({
         type: WindowActionKind.ENTER_FULLSCREEN,
       });
@@ -96,13 +95,13 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
         "width 0.5s ease 0s, height 0.5s ease 0s, transform 0.5s ease 0s";
   };
 
-  const onCollapse = () => {
+  const onMinimize = () => {
     const dockEl = document.getElementById("dock");
 
     const el = rndRef.current?.getSelfElement();
 
     if (!el || !dockEl) {
-      console.error("onCollapse: dockEl or el is not found");
+      console.error("onMinimize: dockEl or el is not found");
       return;
     }
 
@@ -117,9 +116,9 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
 
     addZoomInEffect(el, dockEl);
 
-    collapseApp({
+    minimizeApp({
       ...app,
-      isCollapsed: true,
+      isMinimized: true,
       screenshot,
     });
   };
@@ -133,11 +132,7 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
     <WindowContainer
       ref={rndRef}
       bounds="#desktop"
-      style={{
-        background: "white",
-        overflow: "hidden",
-        zIndex: currentApp?.id === app.id ? "1" : "unset",
-      }}
+      $isFocus={currentApp?.id === app.id}
       position={state.position}
       size={state.size}
       minWidth={320}
@@ -149,13 +144,11 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
       onResize={onResize}
     >
       <WindowActionWrapper>
-        <button onClick={onCloseApp} onMouseDown={preventDrag}>
-          Close
-        </button>
-        <button onClick={onCollapse}>Colapse</button>
-        <button onClick={onToggleFullScreen} onMouseDown={preventDrag}>
-          Toggle fullscreen
-        </button>
+        <WindowActions
+          onClose={onCloseApp}
+          onMinimize={onMinimize}
+          onStretch={onToggleFullScreen}
+        />
       </WindowActionWrapper>
       <ContentWrapper ref={contentRef}>{children}</ContentWrapper>
     </WindowContainer>
@@ -164,25 +157,39 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
 
 export default Window;
 
-const useListenUnCollapsed = (
+const useListenUnMinimized = (
   app: App,
   rndRef: React.MutableRefObject<Rnd>
 ) => {
   useEffect(() => {
-    const handleUnCollapsed = () => {
+    const handleUnMinimized = () => {
       const el = rndRef.current.getSelfElement();
       if (el) addZoomOutEffect(el);
     };
 
-    subscribeAppUnCollapsed(app, handleUnCollapsed);
+    subscribeAppUnMinimized(app, handleUnMinimized);
 
     return () => {
-      unsubscribeAppUnCollapsed(app, handleUnCollapsed);
+      unsubscribeAppUnMinimized(app, handleUnMinimized);
     };
   }, [app.id]);
 };
 
-const WindowContainer = styled(Rnd)``;
+const WindowContainer = styled(Rnd)<{ $isFocus: boolean }>`
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 10px 30px 2px;
+  z-index: ${(props) => (props.$isFocus ? 1 : 0)};
+
+  ${(props) =>
+    props.$isFocus &&
+    css`
+      z-index: "1";
+      box-shadow: rgba(0, 0, 0, 0.65) 0px 10px 30px 2px;
+      border-color: rgba(255, 255, 255, 0.4);
+    `}
+`;
 
 const WindowActionWrapper = styled.div`
   display: flex;
@@ -194,4 +201,5 @@ const WindowActionWrapper = styled.div`
 const ContentWrapper = styled.div`
   height: calc(100% - ${WINDOW.HEADER_HEIGHT}px);
   overflow: auto;
+  background-color: palegoldenrod;
 `;

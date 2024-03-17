@@ -1,13 +1,13 @@
-import { CollapseApp, useDesktopStore } from "@/stores/desktop";
+import { MinimizedApp, useDesktopStore } from "@/stores/desktop";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { publicAppUnCollapsed } from "../Window/utils";
+import { publicAppUnMinimized } from "../Window/utils";
 
-interface CollapseAppIconProps {
-  app: CollapseApp;
+interface MinimizedAppIconProps {
+  app: MinimizedApp;
 }
-const CollapseAppIcon: React.FC<CollapseAppIconProps> = ({ app }) => {
+const MinimizedAppIcon: React.FC<MinimizedAppIconProps> = ({ app }) => {
   const [screenshot, setScreenshot] = useState("");
   const openApp = useDesktopStore((state) => state.openApp);
 
@@ -18,13 +18,13 @@ const CollapseAppIcon: React.FC<CollapseAppIconProps> = ({ app }) => {
   }, [app.screenshot]);
 
   const onOpenApp = () => {
-    publicAppUnCollapsed(app);
+    publicAppUnMinimized(app);
 
     openApp(app.id);
   };
 
   return (
-    <CollapseAppIconContainer
+    <MinimizedAppIconContainer
       initial={{ opacity: 0, width: 0, padding: 0 }}
       animate={{
         opacity: 1,
@@ -44,13 +44,13 @@ const CollapseAppIcon: React.FC<CollapseAppIconProps> = ({ app }) => {
         layout
         $shortcut={app.shortcut}
       />
-    </CollapseAppIconContainer>
+    </MinimizedAppIconContainer>
   );
 };
 
-export default CollapseAppIcon;
+export default MinimizedAppIcon;
 
-const CollapseAppIconContainer = styled(motion.button)<{
+const MinimizedAppIconContainer = styled(motion.button)<{
   $screenshot: string;
 }>`
   position: relative;

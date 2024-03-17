@@ -9,10 +9,10 @@ export interface App {
   component: React.ReactNode;
   shortcut: string;
   isOpen?: boolean;
-  isCollapsed?: boolean;
+  isMinimized?: boolean;
 }
 
-export interface CollapseApp extends App {
+export interface MinimizedApp extends App {
   screenshot: Promise<string>;
 }
 
@@ -38,11 +38,11 @@ const Reminder = () => {
 interface DesktopState {
   appList: App[];
   openAppList: App[];
-  collapseList: CollapseApp[];
+  minimizeList: MinimizedApp[];
   currentApp: App | null;
   openApp: (id: string) => void;
   closeApp: (id: string) => void;
-  collapseApp: (app: CollapseApp) => void;
+  minimizeApp: (app: MinimizedApp) => void;
 }
 
 export const useDesktopStore = create<DesktopState>((set, get) => ({
@@ -61,16 +61,16 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
     },
   ],
   openAppList: [],
-  collapseList: [],
+  minimizeList: [],
   currentApp: null,
   openApp: (id: string) => {
-    const { appList, currentApp, collapseList, openAppList } = get();
+    const { appList, currentApp, minimizeList, openAppList } = get();
 
     // If the app is already open, don't open it again
     if (currentApp?.id === id) return;
 
     const app =
-      collapseList.find((app) => app.id === id) ??
+      minimizeList.find((app) => app.id === id) ??
       appList.find((app) => app.id === id);
 
     // If the app is not open, don't open it
@@ -88,12 +88,12 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       set({ currentApp: app });
     }
 
-    // If the app is collapsed, remove it from the collapsed list
-    if (app && app.isCollapsed) {
-      set({ collapseList: collapseList.filter((app) => app.id !== id) });
+    // If the app is minimized, remove it from the minimized list
+    if (app && app.isMinimized) {
+      set({ minimizeList: minimizeList.filter((app) => app.id !== id) });
       set({
         openAppList: openAppList.map((app) =>
-          app.id === id ? { ...app, isCollapsed: true } : app
+          app.id === id ? { ...app, isMinimized: true } : app
         ),
       });
     }
@@ -106,19 +106,19 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
     if (app) {
       set({
         appList: appList.map((app) =>
-          app.id === id ? { ...app, isOpen: false, isCollapsed: false } : app
+          app.id === id ? { ...app, isOpen: false, isMinimized: false } : app
         ),
       });
       set({ openAppList: openAppList.filter((app) => app.id !== id) });
-      set({ collapseList: get().collapseList.filter((app) => app.id !== id) });
+      set({ minimizeList: get().minimizeList.filter((app) => app.id !== id) });
     }
 
     if (currentApp?.id === id) {
       set({ currentApp: null });
     }
   },
-  collapseApp: (app: CollapseApp) => {
-    const { openAppList, collapseList, currentApp } = get();
+  minimizeApp: (app: MinimizedApp) => {
+    const { openAppList, minimizeList, currentApp } = get();
 
     const appIndex = openAppList.findIndex((a) => a.id === app.id);
 
@@ -130,7 +130,7 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       set({ openAppList: newOpenAppList });
     }
 
-    set({ collapseList: [...collapseList, app] });
+    set({ minimizeList: [...minimizeList, app] });
 
     if (currentApp?.id === app.id) {
       set({ currentApp: null });

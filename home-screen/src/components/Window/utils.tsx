@@ -6,16 +6,12 @@ export function preventAnimate(el: HTMLElement) {
   el.style.transition = "none";
 }
 
-export function preventDrag(e: React.MouseEvent) {
-  e.stopPropagation();
-}
-
 export function addZoomInEffect(el: HTMLElement, dockEl: HTMLElement) {
   const elClientRect = el.getBoundingClientRect();
   const dockClientRect = dockEl.getBoundingClientRect();
 
   el.style.transition = generateTransition({
-    ats: ["width", "height", "transform", "opacity", "left", "top"],
+    attrs: ["width", "height", "transform", "opacity", "left", "top"],
     duration: "0.6s",
   });
 
@@ -38,7 +34,7 @@ export function addZoomInEffect(el: HTMLElement, dockEl: HTMLElement) {
 
 export function addZoomOutEffect(el: HTMLElement) {
   el.style.transition = generateTransition({
-    ats: ["width", "height", "transform", "opacity", "left", "top"],
+    attrs: ["width", "height", "transform", "opacity", "left", "top"],
     duration: "0.6s",
   });
 
@@ -52,21 +48,21 @@ export function addZoomOutEffect(el: HTMLElement) {
   el.style.opacity = "1";
 }
 
-export function subscribeAppUnCollapsed(app: App, cb: () => void) {
-  document.addEventListener(`${app.id}-unCollapsed`, cb);
+export function subscribeAppUnMinimized(app: App, cb: () => void) {
+  document.addEventListener(`${app.id}-unMinimized`, cb);
 }
 
-export function unsubscribeAppUnCollapsed(app: App, cb: () => void) {
-  document.removeEventListener(`${app.id}-unCollapsed`, cb);
+export function unsubscribeAppUnMinimized(app: App, cb: () => void) {
+  document.removeEventListener(`${app.id}-unMinimized`, cb);
 }
 
-export function publicAppUnCollapsed(app: App) {
-  const event = new CustomEvent(`${app.id}-unCollapsed`);
+export function publicAppUnMinimized(app: App) {
+  const event = new CustomEvent(`${app.id}-unMinimized`);
 
   document.dispatchEvent(event);
 }
 
-function generateTransition(options: { ats: string[]; duration: string }) {
-  const { ats, duration } = options;
-  return ats.map((at) => `${at} ${duration} ease 0s`).join(", ");
+function generateTransition(options: { attrs: string[]; duration: string }) {
+  const { attrs, duration } = options;
+  return attrs.map((at) => `${at} ${duration} ease 0s`).join(", ");
 }
