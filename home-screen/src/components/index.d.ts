@@ -1,5 +1,5 @@
-declare module "app1/App1";
-declare module "use-react-screenshot";
+// Remote Apps
+declare module "reminders/RemindersApp";
 
 declare module "*.jpg";
 declare module "*.png";

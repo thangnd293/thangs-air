@@ -18,7 +18,7 @@ const devConfig = {
   stats: "errors-warnings",
   devtool: "cheap-module-source-map",
   devServer: {
-    port: 2509,
+    port: 2510,
     historyApiFallback: true,
     open: true,
     hot: true,
@@ -40,11 +40,6 @@ const devConfig = {
       },
     ],
   },
-  optimization: {
-    splitChunks: {
-      chunks: "all",
-    },
-  },
   performance: {
     hints: false,
   },
@@ -54,9 +49,10 @@ const devConfig = {
       overlay: true,
     }),
     new ModuleFederationPlugin({
-      name: "container",
-      remotes: {
-        reminders: "reminders@http://localhost:2510/remoteEntry.js",
+      name: "reminders",
+      filename: "remoteEntry.js",
+      exposes: {
+        "./RemindersApp": "./src/bootstrap",
       },
       shared: ["react", "react-dom"],
     }),

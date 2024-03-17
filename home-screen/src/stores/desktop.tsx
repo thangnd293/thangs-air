@@ -1,4 +1,5 @@
 import { images } from "@/components/Images";
+import RemindersApp from "@/components/RemindersApp";
 import React from "react";
 
 import { create } from "zustand";
@@ -57,7 +58,7 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       id: "2",
       name: "Reminder",
       shortcut: images.reminders,
-      component: <Reminder />,
+      component: <RemindersApp />,
     },
   ],
   openAppList: [],

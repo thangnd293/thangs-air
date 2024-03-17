@@ -202,4 +202,5 @@ const ContentWrapper = styled.div`
   height: calc(100% - ${WINDOW.HEADER_HEIGHT}px);
   overflow: auto;
   background-color: palegoldenrod;
+  container-type: inline-size;
 `;

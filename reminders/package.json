@@ -1,12 +1,12 @@
 {
-  "name": "react-webpack",
+  "name": "reminders",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --config configs/webpack/webpack.dev.js",
     "build": "webpack --config configs/webpack/webpack.prod.js",
-    "preview": "serve dist/ -s -l 2509"
+    "preview": "serve dist/ -s -l 2510"
   },
   "keywords": [],
   "author": "",
@@ -20,8 +20,12 @@
     "css-loader": "^6.10.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "html-webpack-plugin": "^5.6.0",
+    "postcss-loader": "^8.1.1",
+    "postcss-preset-env": "^9.5.1",
     "react-refresh": "^0.14.0",
     "react-refresh-typescript": "^2.0.9",
+    "sass": "^1.72.0",
+    "sass-loader": "^14.1.1",
     "serve": "^14.2.1",
     "style-loader": "^3.3.4",
     "ts-loader": "^9.5.1",
@@ -32,13 +36,7 @@
     "webpack-merge": "^5.10.0"
   },
   "dependencies": {
-    "framer-motion": "^11.0.14",
-    "html2canvas": "^1.4.1",
-    "normalize.css": "^8.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-rnd": "^10.4.1",
-    "styled-components": "^6.1.8",
-    "zustand": "^4.5.2"
+    "react-dom": "^18.2.0"
   }
 }
