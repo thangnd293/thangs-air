@@ -20,5 +20,5 @@
       "@hooks/*": ["./public/hooks/*"]
     }
   },
-  "include": ["src/**/*", "configs/**/*", "public/images"]
+  "include": ["src/**/*", "configs/**/*"]
 }

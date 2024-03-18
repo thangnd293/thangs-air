@@ -1,6 +1,6 @@
 import { App, useDesktopStore } from "@/stores/desktop";
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { publicAppUnMinimized } from "../Window/utils";
 
 interface AppIconProps {
@@ -15,12 +15,18 @@ const AppIcon: React.FC<AppIconProps> = ({ app }) => {
     openApp(app.id);
   };
 
-  return <AppIconContainer onClick={onOpenApp} $shortcut={app.shortcut} />;
+  return (
+    <AppIconContainer
+      onClick={onOpenApp}
+      $shortcut={app.shortcut}
+      $isOpen={app.isOpen}
+    />
+  );
 };
 
 export default AppIcon;
 
-const AppIconContainer = styled.button<{ $shortcut: string }>`
+const AppIconContainer = styled.button<{ $shortcut: string; $isOpen: boolean }>`
   box-sizing: content-box;
   width: 54px;
   height: 55px;
@@ -33,4 +39,10 @@ const AppIconContainer = styled.button<{ $shortcut: string }>`
   margin-bottom: 5px;
   cursor: pointer;
   background-origin: content-box;
+
+  ${({ $isOpen }) =>
+    $isOpen &&
+    css`
+      background-color: rebeccapurple;
+    `}
 `;

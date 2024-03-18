@@ -1,3 +1,6 @@
+export const WINDOW_BAR_HEIGHT = 24;
+export const MENU_BAR_HEIGHT = 24;
+
 export const WINDOW = {
   DEFAULT_SIZE: {
     width: 320,

@@ -1,19 +1,26 @@
-import { WINDOW } from "@/constant";
+import React, { useCallback, useEffect, useRef } from "react";
+import { Rnd, RndDragCallback, RndResizeCallback } from "react-rnd";
+import { useShallow } from "zustand/react/shallow";
+
 import { App, useDesktopStore } from "@/stores/desktop";
 import { takeScreenShot } from "@/utils/function";
-import React, { useEffect, useRef } from "react";
-import { Rnd, RndDragCallback, RndResizeCallback } from "react-rnd";
-import styled, { css } from "styled-components";
-import { useShallow } from "zustand/react/shallow";
-import WindowActions from "./WindowActions";
+import WindowActions from "../WindowActions";
+import { ContentWrapper, WindowActionWrapper, WindowContainer } from "./styles";
 import useWindowReducer, { WindowActionKind } from "./useWindowReducer";
 import {
   addZoomInEffect,
   addZoomOutEffect,
+  generateTransition,
   preventAnimate,
+  publicAppFullscreen,
   subscribeAppUnMinimized,
   unsubscribeAppUnMinimized,
 } from "./utils";
+import { WINDOW } from "@/constant";
+import {
+  subscribeExitFullscreen,
+  unsubscribeExitFullscreen,
+} from "../Header/utils";
 
 interface WindowProps {
   app: App;
@@ -38,6 +45,32 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
   const prevPosition = useRef(state.position);
 
   useListenUnMinimized(app, rndRef);
+
+  const handleExitFullscreen = useCallback(() => {
+    dispatch({
+      type: WindowActionKind.EXIT_FULLSCREEN,
+      payload: {
+        prevSize: prevSize.current,
+        prevPosition: prevPosition.current,
+      },
+    });
+  }, []);
+
+  const handleFullscreen = () => {
+    storePrevSizeAndPosition();
+    publicAppFullscreen(app.id);
+    dispatch({
+      type: WindowActionKind.ENTER_FULLSCREEN,
+    });
+  };
+
+  useEffect(() => {
+    subscribeExitFullscreen(app.id, handleExitFullscreen);
+
+    return () => {
+      unsubscribeExitFullscreen(app.id, handleExitFullscreen);
+    };
+  }, [app.id, handleExitFullscreen]);
 
   const onResize: RndResizeCallback = (_, __, ref, ___, position) => {
     preventAnimate(ref);
@@ -73,26 +106,17 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
   const onOpenApp = openApp.bind(null, app.id);
 
   const onToggleFullScreen = () => {
-    if (state.isFullScreen) {
-      dispatch({
-        type: WindowActionKind.EXIT_FULLSCREEN,
-        payload: {
-          prevSize: prevSize.current,
-          prevPosition: prevPosition.current,
-        },
-      });
-    } else {
-      storePrevSizeAndPosition();
-      dispatch({
-        type: WindowActionKind.ENTER_FULLSCREEN,
-      });
-    }
+    const fn = state.isFullScreen ? handleExitFullscreen : handleFullscreen;
+
+    fn();
 
     const el = rndRef.current?.getSelfElement();
 
     if (el)
-      el.style.transition =
-        "width 0.5s ease 0s, height 0.5s ease 0s, transform 0.5s ease 0s";
+      el.style.transition = generateTransition({
+        attrs: ["width", "height", "transform"],
+        duration: "0.5s",
+      });
   };
 
   const onMinimize = () => {
@@ -133,24 +157,29 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
       ref={rndRef}
       bounds="#desktop"
       $isFocus={currentApp?.id === app.id}
+      $isFullscreen={state.isFullScreen}
       position={state.position}
       size={state.size}
-      minWidth={320}
-      minHeight={200}
+      minWidth={WINDOW.MIN_WIDTH}
+      minHeight={WINDOW.MIN_HEIGHT}
+      disableDragging={state.isFullScreen}
+      enableResizing={!state.isFullScreen}
       onMouseDown={onOpenApp}
       onResizeStart={onOpenApp}
       onDragStart={onDragStart}
       onDragStop={onDragStop}
       onResize={onResize}
     >
-      <WindowActionWrapper>
+      <WindowActionWrapper $isFullscreen={state.isFullScreen}>
         <WindowActions
           onClose={onCloseApp}
           onMinimize={onMinimize}
           onStretch={onToggleFullScreen}
         />
       </WindowActionWrapper>
-      <ContentWrapper ref={contentRef}>{children}</ContentWrapper>
+      <ContentWrapper ref={contentRef} $isFullscreen={state.isFullScreen}>
+        {children}
+      </ContentWrapper>
     </WindowContainer>
   );
 };
@@ -174,33 +203,3 @@ const useListenUnMinimized = (
     };
   }, [app.id]);
 };
-
-const WindowContainer = styled(Rnd)<{ $isFocus: boolean }>`
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.45) 0px 10px 30px 2px;
-  z-index: ${(props) => (props.$isFocus ? 1 : 0)};
-
-  ${(props) =>
-    props.$isFocus &&
-    css`
-      z-index: "1";
-      box-shadow: rgba(0, 0, 0, 0.65) 0px 10px 30px 2px;
-      border-color: rgba(255, 255, 255, 0.4);
-    `}
-`;
-
-const WindowActionWrapper = styled.div`
-  display: flex;
-  gap: 4px;
-  height: ${WINDOW.HEADER_HEIGHT}px;
-  background-color: #f0f0f0;
-`;
-
-const ContentWrapper = styled.div`
-  height: calc(100% - ${WINDOW.HEADER_HEIGHT}px);
-  overflow: auto;
-  background-color: palegoldenrod;
-  container-type: inline-size;
-`;

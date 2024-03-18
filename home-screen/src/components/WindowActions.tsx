@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import CloseIcon from "../Icons/CloseIcon";
-import MinimizeIcon from "../Icons/MinimizeIcon";
-import StretchIcon from "../Icons/StretchIcon";
+import CloseIcon from "./Icons/CloseIcon";
+import MinimizeIcon from "./Icons/MinimizeIcon";
+import StretchIcon from "./Icons/StretchIcon";
 
 interface WindowActionsProps {
-  onClose: () => void;
-  onMinimize: () => void;
-  onStretch: () => void;
+  onClose?: () => void;
+  onMinimize?: () => void;
+  onStretch?: () => void;
 }
 
 const WindowActions: React.FC<WindowActionsProps> = ({
@@ -17,13 +17,25 @@ const WindowActions: React.FC<WindowActionsProps> = ({
 }) => {
   return (
     <WindowActionsContainer>
-      <CloseButton onClick={onClose} onMouseDown={preventDrag}>
+      <CloseButton
+        disabled={!onClose}
+        onClick={onClose}
+        onMouseDown={preventDrag}
+      >
         <CloseIcon color="#911f17" width={7} height={7} />
       </CloseButton>
-      <MinimizeButton onClick={onMinimize} onMouseDown={preventDrag}>
+      <MinimizeButton
+        disabled={!onMinimize}
+        onClick={onMinimize}
+        onMouseDown={preventDrag}
+      >
         <MinimizeIcon color="#A97229" />
       </MinimizeButton>
-      <StretchButton onClick={onStretch} onMouseDown={preventDrag}>
+      <StretchButton
+        disabled={!onStretch}
+        onClick={onStretch}
+        onMouseDown={preventDrag}
+      >
         <StretchIcon color="#286017" />
       </StretchButton>
     </WindowActionsContainer>
@@ -60,6 +72,12 @@ const Button = styled.button`
   border-radius: 9999px;
   border: none;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
 `;
 
 const CloseButton = styled(Button)`

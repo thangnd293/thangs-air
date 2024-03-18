@@ -83,8 +83,8 @@ function reducer(state: WindowState, action: WindowActions): WindowState {
         ...state,
         isFullScreen: true,
         size: {
-          width: "100%",
-          height: "100%",
+          width: "100vw",
+          height: `100vh`,
         },
         position: {
           x: 0,

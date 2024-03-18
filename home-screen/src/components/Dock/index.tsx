@@ -4,13 +4,25 @@ import React from "react";
 import styled from "styled-components";
 import AppIcon from "./AppIcon";
 import CollapseAppIcon from "./MinimizedAppIcon";
+import { useCurrentFullscreenApp } from "@/hooks/useCurrentFullscreenApp";
 
 const Dock = () => {
   const appList = useDesktopStore((state) => state.appList);
   const minimizeList = useDesktopStore((state) => state.minimizeList);
 
+  const { isFullscreen } = useCurrentFullscreenApp();
+
   return (
-    <DockContainer id="dock">
+    <DockContainer
+      id="dock"
+      initial={{ x: "-50%" }}
+      animate={{
+        y: isFullscreen ? "110%" : 0,
+      }}
+      transition={{
+        type: "tween",
+      }}
+    >
       <AnimatePresence>
         {appList.map((app) => (
           <AppIcon key={app.id} app={app} />
@@ -36,7 +48,7 @@ const Dock = () => {
 
 export default Dock;
 
-const DockContainer = styled.div`
+const DockContainer = styled(motion.div)`
   display: flex;
   align-items: center;
   height: 82px;
@@ -49,7 +61,6 @@ const DockContainer = styled.div`
   position: fixed;
   bottom: 6px;
   left: 50%;
-  transform: translateX(-50%);
   z-index: 100;
 `;
 

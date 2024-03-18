@@ -30,12 +30,6 @@ const Notes = () => {
   );
 };
 
-const Reminder = () => {
-  console.log("Rendering Reminder");
-
-  return <div>Reminder</div>;
-};
-
 interface DesktopState {
   appList: App[];
   openAppList: App[];

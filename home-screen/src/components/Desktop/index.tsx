@@ -1,3 +1,4 @@
+import { MENU_BAR_HEIGHT } from "@/constant";
 import { useDesktopStore } from "@/stores/desktop";
 import Dock from "@components/Dock";
 import { images } from "@components/Images";
@@ -23,8 +24,9 @@ const Desktop = () => {
 export default Desktop;
 
 const DesktopContainer = styled.div`
+  height: calc(100vh - ${MENU_BAR_HEIGHT}px);
   width: 100%;
-  flex: 1;
+  margin-top: ${MENU_BAR_HEIGHT}px;
   overflow: hidden;
   background: lightblue url(${images.wallpaper}) no-repeat fixed center;
 `;
