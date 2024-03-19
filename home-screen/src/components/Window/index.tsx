@@ -30,7 +30,7 @@ interface WindowProps {
 const Window: React.FC<WindowProps> = ({ app, children }) => {
   const { currentApp, openApp, closeApp, minimizeApp } = useDesktopStore(
     useShallow((state) => ({
-      currentApp: state.currentApp,
+      currentApp: state.currentAppConnext[0],
       openApp: state.openApp,
       closeApp: state.closeApp,
       minimizeApp: state.minimizeApp,
@@ -140,11 +140,7 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
 
     addZoomInEffect(el, dockEl);
 
-    minimizeApp({
-      ...app,
-      isMinimized: true,
-      screenshot,
-    });
+    minimizeApp(app.id, screenshot);
   };
 
   function storePrevSizeAndPosition() {

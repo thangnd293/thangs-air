@@ -8,7 +8,7 @@ import { useCurrentFullscreenApp } from "@/hooks/useCurrentFullscreenApp";
 
 const Dock = () => {
   const appList = useDesktopStore((state) => state.appList);
-  const minimizeList = useDesktopStore((state) => state.minimizeList);
+  const minimizeList = useDesktopStore((state) => state.minimizeAppList);
 
   const { isFullscreen } = useCurrentFullscreenApp();
 

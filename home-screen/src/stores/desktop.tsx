@@ -10,11 +10,10 @@ export interface App {
   component: React.ReactNode;
   shortcut: string;
   isOpen?: boolean;
-  isMinimized?: boolean;
 }
 
 export interface MinimizedApp extends App {
-  screenshot: Promise<string>;
+  screenshot?: Promise<string>;
 }
 
 const Notes = () => {
@@ -33,11 +32,11 @@ const Notes = () => {
 interface DesktopState {
   appList: App[];
   openAppList: App[];
-  minimizeList: MinimizedApp[];
-  currentApp: App | null;
+  minimizeAppList: App[];
+  currentAppConnext: App[];
   openApp: (id: string) => void;
   closeApp: (id: string) => void;
-  minimizeApp: (app: MinimizedApp) => void;
+  minimizeApp: (id: string, screenshot: MinimizedApp["screenshot"]) => void;
 }
 
 export const useDesktopStore = create<DesktopState>((set, get) => ({
@@ -56,79 +55,57 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
     },
   ],
   openAppList: [],
-  minimizeList: [],
-  currentApp: null,
-  openApp: (id: string) => {
-    const { appList, currentApp, minimizeList, openAppList } = get();
+  minimizeAppList: [],
+  currentAppConnext: [],
+  openApp: (id) => {
+    const { appList, openAppList } = get();
+
+    const isOpen = openAppList.some((app) => app.id === id);
+    const app = appList.find((app) => app.id === id);
+    const newOpenApp: App = { ...app, isOpen: true };
 
     // If the app is already open, don't open it again
-    if (currentApp?.id === id) return;
-
-    const app =
-      minimizeList.find((app) => app.id === id) ??
-      appList.find((app) => app.id === id);
-
-    // If the app is not open, don't open it
-    if (app && !app.isOpen) {
+    if (!isOpen) {
       set({
-        appList: appList.map((app) =>
-          app.id === id ? { ...app, isOpen: true } : app
-        ),
+        appList: appList.map((app) => (app.id === id ? newOpenApp : app)),
       });
-      set({ openAppList: [...openAppList, app] });
+
+      set({ openAppList: [...openAppList, newOpenApp] });
+    } else {
+      set((state) => ({
+        minimizeAppList: state.minimizeAppList.filter((app) => app.id !== id),
+      }));
     }
 
-    // If the app is open, bring it to the front
-    if (app) {
-      set({ currentApp: app });
-    }
-
-    // If the app is minimized, remove it from the minimized list
-    if (app && app.isMinimized) {
-      set({ minimizeList: minimizeList.filter((app) => app.id !== id) });
-      set({
-        openAppList: openAppList.map((app) =>
-          app.id === id ? { ...app, isMinimized: true } : app
-        ),
-      });
-    }
+    // Bring it to the front
+    set((state) => ({
+      currentAppConnext: [
+        newOpenApp,
+        ...state.currentAppConnext.filter((app) => app.id !== id),
+      ],
+    }));
   },
-  closeApp: (id: string) => {
-    const { appList, openAppList, currentApp } = get();
-
-    const app = appList.find((app) => app.id === id);
-
-    if (app) {
-      set({
-        appList: appList.map((app) =>
-          app.id === id ? { ...app, isOpen: false, isMinimized: false } : app
-        ),
-      });
-      set({ openAppList: openAppList.filter((app) => app.id !== id) });
-      set({ minimizeList: get().minimizeList.filter((app) => app.id !== id) });
-    }
-
-    if (currentApp?.id === id) {
-      set({ currentApp: null });
-    }
+  closeApp: (id) => {
+    set((state) => ({
+      appList: state.appList.map((app) =>
+        app.id === id ? { ...app, isOpen: false, isMinimized: false } : app
+      ),
+      openAppList: state.openAppList.filter((app) => app.id !== id),
+      currentAppConnext: state.currentAppConnext.filter((app) => app.id !== id),
+      minimizeAppList: state.minimizeAppList.filter((app) => app.id !== id),
+    }));
   },
-  minimizeApp: (app: MinimizedApp) => {
-    const { openAppList, minimizeList, currentApp } = get();
+  minimizeApp: (id, screenshot) => {
+    const { openAppList } = get();
 
-    const appIndex = openAppList.findIndex((a) => a.id === app.id);
+    const app = openAppList.find((app) => app.id === id);
 
-    if (appIndex !== -1) {
-      const newOpenAppList = openAppList.map((a) =>
-        a.id === app.id ? app : a
-      );
-
-      set({ openAppList: newOpenAppList });
-    }
-
-    set({ minimizeList: [...minimizeList, app] });
-
-    if (currentApp?.id === app.id) {
-      set({ currentApp: null });
-    }
+    set((state) => ({
+      currentAppConnext: state.currentAppConnext.filter((app) => app.id !== id),
+      minimizeAppList: [
+        ...state.minimizeAppList,
+        { ...app, isMinimized: true, screenshot },
+      ],
+    }));
   },
 }));

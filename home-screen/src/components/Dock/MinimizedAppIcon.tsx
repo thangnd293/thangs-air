@@ -19,7 +19,6 @@ const MinimizedAppIcon: React.FC<MinimizedAppIconProps> = ({ app }) => {
 
   const onOpenApp = () => {
     publicAppUnMinimized(app);
-
     openApp(app.id);
   };
 
