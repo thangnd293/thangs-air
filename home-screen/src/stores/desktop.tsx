@@ -1,4 +1,6 @@
+import FinderApp from "@/components/FinderApp";
 import { images } from "@/components/Images";
+import NotesApp from "@/components/NotesApp";
 import RemindersApp from "@/components/RemindersApp";
 import React from "react";
 
@@ -10,24 +12,12 @@ export interface App {
   component: React.ReactNode;
   shortcut: string;
   isOpen?: boolean;
+  isFullscreen?: boolean;
 }
 
 export interface MinimizedApp extends App {
   screenshot?: Promise<string>;
 }
-
-const Notes = () => {
-  console.log("Rendering Notes");
-  return (
-    <div>
-      <img
-        style={{ width: "100px", height: "100px" }}
-        src="https://gamek.mediacdn.vn/thumb_w/640/133514250583805952/2020/7/7/photo-1-1594098002042331340775.jpg"
-        alt=""
-      />
-    </div>
-  );
-};
 
 interface DesktopState {
   appList: App[];
@@ -37,15 +27,17 @@ interface DesktopState {
   openApp: (id: string) => void;
   closeApp: (id: string) => void;
   minimizeApp: (id: string, screenshot: MinimizedApp["screenshot"]) => void;
+  openFullscreen: (id: string) => void;
+  exitFullscreen: (id: string) => void;
 }
 
 export const useDesktopStore = create<DesktopState>((set, get) => ({
   appList: [
     {
       id: "1",
-      name: "Notes",
+      name: "Finder",
       shortcut: images.finder,
-      component: <Notes />,
+      component: <FinderApp />,
     },
     {
       id: "2",
@@ -53,12 +45,18 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       shortcut: images.reminders,
       component: <RemindersApp />,
     },
+    {
+      id: "3",
+      name: "Notes",
+      shortcut: images.notes,
+      component: <NotesApp />,
+    },
   ],
   openAppList: [],
   minimizeAppList: [],
   currentAppConnext: [],
   openApp: (id) => {
-    const { appList, openAppList } = get();
+    const { appList, openAppList, currentAppConnext } = get();
 
     const isOpen = openAppList.some((app) => app.id === id);
     const app = appList.find((app) => app.id === id);
@@ -77,13 +75,15 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
       }));
     }
 
+    if (currentAppConnext[0]?.id === id) return;
+
     // Bring it to the front
-    set((state) => ({
+    set({
       currentAppConnext: [
         newOpenApp,
-        ...state.currentAppConnext.filter((app) => app.id !== id),
+        ...currentAppConnext.filter((app) => app.id !== id),
       ],
-    }));
+    });
   },
   closeApp: (id) => {
     set((state) => ({
@@ -106,6 +106,20 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
         ...state.minimizeAppList,
         { ...app, isMinimized: true, screenshot },
       ],
+    }));
+  },
+  openFullscreen: (id) => {
+    set((state) => ({
+      openAppList: state.openAppList.map((app) =>
+        app.id === id ? { ...app, isFullscreen: true } : app
+      ),
+    }));
+  },
+  exitFullscreen: (id) => {
+    set((state) => ({
+      openAppList: state.openAppList.map((app) =>
+        app.id === id ? { ...app, isFullscreen: false } : app
+      ),
     }));
   },
 }));

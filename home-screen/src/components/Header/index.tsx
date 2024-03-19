@@ -1,34 +1,19 @@
+import { MENU_BAR_HEIGHT, WINDOW_BAR_HEIGHT } from "@/constant";
+import { useDesktopStore } from "@/stores/desktop";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MenuBar from "./MenuBar";
 import WindowControlBar from "./WindowControlBar";
-import { useCurrentFullscreenApp } from "@/hooks/useCurrentFullscreenApp";
-import { motion } from "framer-motion";
-import { MENU_BAR_HEIGHT, WINDOW_BAR_HEIGHT } from "@/constant";
 
 const HEADER_HEIGHT = MENU_BAR_HEIGHT + WINDOW_BAR_HEIGHT;
 
 const Header = () => {
-  const { isFullscreen } = useCurrentFullscreenApp();
-  const [isVisible, setIsVisible] = useState(!isFullscreen);
+  const isFullscreen = useDesktopStore((state) =>
+    state.openAppList.some((app) => app.isFullscreen)
+  );
 
-  useEffect(() => {
-    if (!isFullscreen) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (e.clientY < HEADER_HEIGHT) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, [isFullscreen]);
+  const isVisible = useIsVisibleHeader(isFullscreen);
 
   return (
     <HeaderContainer
@@ -44,6 +29,30 @@ const Header = () => {
 };
 
 export default Header;
+
+const useIsVisibleHeader = (enable: boolean) => {
+  const [isVisible, setIsVisible] = useState(!enable);
+
+  useEffect(() => {
+    if (!enable) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (e.clientY < HEADER_HEIGHT) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [enable]);
+
+  return isVisible;
+};
 
 const HeaderContainer = styled(motion.div)`
   position: fixed;

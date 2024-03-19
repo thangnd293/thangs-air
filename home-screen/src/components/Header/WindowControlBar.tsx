@@ -1,29 +1,28 @@
-import { useCurrentFullscreenApp } from "@/hooks/useCurrentFullscreenApp";
+import { WINDOW_BAR_HEIGHT } from "@/constant";
+import { useDesktopStore } from "@/stores/desktop";
 import React from "react";
 import styled from "styled-components";
+import { useShallow } from "zustand/react/shallow";
 import WindowActions from "../WindowActions";
-import { useDesktopStore } from "@/stores/desktop";
-import { publicExitFullscreen } from "./utils";
-import { WINDOW_BAR_HEIGHT } from "@/constant";
 
 const WindowControlBar = () => {
-  const { appFullscreen, isFullscreen, exitFullscreen } =
-    useCurrentFullscreenApp();
-  const { closeApp } = useDesktopStore();
+  const { closeApp, currentApp, isFullscreen, exitFullscreen } =
+    useDesktopStore(
+      useShallow((state) => ({
+        closeApp: state.closeApp,
+        currentApp: state.currentAppConnext[0],
+        isFullscreen: state.openAppList.some((app) => app.isFullscreen),
+        exitFullscreen: state.exitFullscreen,
+      }))
+    );
 
-  const onClose = () => {
-    closeApp(appFullscreen);
-    exitFullscreen();
-  };
+  const onClose = closeApp.bind(null, currentApp?.id);
 
-  const onStretch = () => {
-    publicExitFullscreen(appFullscreen);
-    exitFullscreen();
-  };
+  const onExitFullscreen = exitFullscreen.bind(null, currentApp?.id);
 
   return (
     <WindowActionsContainer $isVisible={isFullscreen}>
-      <WindowActions onClose={onClose} onStretch={onStretch} />
+      <WindowActions onClose={onClose} onStretch={onExitFullscreen} />
     </WindowActionsContainer>
   );
 };

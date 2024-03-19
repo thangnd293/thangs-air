@@ -61,32 +61,6 @@ export function publicAppUnMinimized(app: App) {
   document.dispatchEvent(event);
 }
 
-export type AppFullscreenEvent = CustomEvent<{
-  appID: string;
-}>;
-
-export function subscribeAppFullscreen(
-  cb: (event: AppFullscreenEvent) => void
-) {
-  document.addEventListener("app-fullscreen", cb);
-}
-
-export function unsubscribeAppFullscreen(
-  cb: (event: AppFullscreenEvent) => void
-) {
-  document.removeEventListener("app-fullscreen", cb);
-}
-
-export function publicAppFullscreen(appID: string) {
-  const event = new CustomEvent("app-fullscreen", {
-    detail: {
-      appID,
-    },
-  });
-
-  document.dispatchEvent(event);
-}
-
 export function generateTransition(options: {
   attrs: string[];
   duration: string;

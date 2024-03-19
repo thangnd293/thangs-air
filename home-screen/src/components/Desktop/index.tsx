@@ -5,14 +5,20 @@ import { images } from "@components/Images";
 import Window from "@components/Window";
 import React from "react";
 import styled from "styled-components";
+import { useShallow } from "zustand/react/shallow";
 
 const Desktop = () => {
-  const openAppList = useDesktopStore((state) => state.openAppList);
+  const { currentApp, openAppList } = useDesktopStore(
+    useShallow((state) => ({
+      openAppList: state.openAppList,
+      currentApp: state.currentAppConnext[0],
+    }))
+  );
 
   return (
     <DesktopContainer id="desktop">
       {openAppList.map((app) => (
-        <Window key={app.id} app={app}>
+        <Window key={app.id} isFocus={currentApp.id === app.id} app={app}>
           {app.component}
         </Window>
       ))}

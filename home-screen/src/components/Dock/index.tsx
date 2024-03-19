@@ -4,13 +4,13 @@ import React from "react";
 import styled from "styled-components";
 import AppIcon from "./AppIcon";
 import CollapseAppIcon from "./MinimizedAppIcon";
-import { useCurrentFullscreenApp } from "@/hooks/useCurrentFullscreenApp";
 
 const Dock = () => {
-  const appList = useDesktopStore((state) => state.appList);
-  const minimizeList = useDesktopStore((state) => state.minimizeAppList);
-
-  const { isFullscreen } = useCurrentFullscreenApp();
+  const { appList, minimizeList, isFullscreen } = useDesktopStore((state) => ({
+    appList: state.appList,
+    minimizeList: state.minimizeAppList,
+    isFullscreen: state.openAppList.some((app) => app.isFullscreen),
+  }));
 
   return (
     <DockContainer

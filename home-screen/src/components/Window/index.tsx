@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Rnd, RndDragCallback, RndResizeCallback } from "react-rnd";
 import { useShallow } from "zustand/react/shallow";
 
+import { WINDOW } from "@/constant";
 import { App, useDesktopStore } from "@/stores/desktop";
 import { takeScreenShot } from "@/utils/function";
 import WindowActions from "../WindowActions";
@@ -12,30 +13,27 @@ import {
   addZoomOutEffect,
   generateTransition,
   preventAnimate,
-  publicAppFullscreen,
   subscribeAppUnMinimized,
   unsubscribeAppUnMinimized,
 } from "./utils";
-import { WINDOW } from "@/constant";
-import {
-  subscribeExitFullscreen,
-  unsubscribeExitFullscreen,
-} from "../Header/utils";
 
 interface WindowProps {
   app: App;
+  isFocus?: boolean;
   children: React.ReactNode;
 }
 
-const Window: React.FC<WindowProps> = ({ app, children }) => {
-  const { currentApp, openApp, closeApp, minimizeApp } = useDesktopStore(
-    useShallow((state) => ({
-      currentApp: state.currentAppConnext[0],
-      openApp: state.openApp,
-      closeApp: state.closeApp,
-      minimizeApp: state.minimizeApp,
-    }))
-  );
+const Window: React.FC<WindowProps> = ({ app, isFocus, children }) => {
+  const { openApp, closeApp, minimizeApp, openFullscreen, exitFullscreen } =
+    useDesktopStore(
+      useShallow((state) => ({
+        openApp: state.openApp,
+        closeApp: state.closeApp,
+        minimizeApp: state.minimizeApp,
+        openFullscreen: state.openFullscreen,
+        exitFullscreen: state.exitFullscreen,
+      }))
+    );
 
   const [state, dispatch] = useWindowReducer();
 
@@ -46,31 +44,19 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
 
   useListenUnMinimized(app, rndRef);
 
-  const handleExitFullscreen = useCallback(() => {
-    dispatch({
-      type: WindowActionKind.EXIT_FULLSCREEN,
-      payload: {
-        prevSize: prevSize.current,
-        prevPosition: prevPosition.current,
-      },
-    });
-  }, []);
-
-  const handleFullscreen = () => {
-    storePrevSizeAndPosition();
-    publicAppFullscreen(app.id);
-    dispatch({
-      type: WindowActionKind.ENTER_FULLSCREEN,
-    });
-  };
-
+  // Restore the previous size and position when the app exits fullscreen
   useEffect(() => {
-    subscribeExitFullscreen(app.id, handleExitFullscreen);
-
-    return () => {
-      unsubscribeExitFullscreen(app.id, handleExitFullscreen);
-    };
-  }, [app.id, handleExitFullscreen]);
+    if (!app.isFullscreen) {
+      dispatch({
+        type: WindowActionKind.EXIT_FULLSCREEN,
+        payload: {
+          prevSize: prevSize.current,
+          prevPosition: prevPosition.current,
+        },
+      });
+      exitFullscreen(app.id);
+    }
+  }, [app.isFullscreen, app.id]);
 
   const onResize: RndResizeCallback = (_, __, ref, ___, position) => {
     preventAnimate(ref);
@@ -105,18 +91,21 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
 
   const onOpenApp = openApp.bind(null, app.id);
 
-  const onToggleFullScreen = () => {
-    const fn = state.isFullScreen ? handleExitFullscreen : handleFullscreen;
-
-    fn();
+  const onFullScreen = () => {
+    storePrevSizeAndPosition();
+    dispatch({
+      type: WindowActionKind.ENTER_FULLSCREEN,
+    });
+    openFullscreen(app.id);
 
     const el = rndRef.current?.getSelfElement();
 
-    if (el)
-      el.style.transition = generateTransition({
-        attrs: ["width", "height", "transform"],
-        duration: "0.5s",
-      });
+    if (!el) return;
+
+    el.style.transition = generateTransition({
+      attrs: ["width", "height", "transform"],
+      duration: "0.5s",
+    });
   };
 
   const onMinimize = () => {
@@ -125,8 +114,7 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
     const el = rndRef.current?.getSelfElement();
 
     if (!el || !dockEl) {
-      console.error("onMinimize: dockEl or el is not found");
-      return;
+      return console.error("onMinimize: dockEl or el is not found");
     }
 
     storePrevSizeAndPosition();
@@ -152,35 +140,35 @@ const Window: React.FC<WindowProps> = ({ app, children }) => {
     <WindowContainer
       ref={rndRef}
       bounds="#desktop"
-      $isFocus={currentApp?.id === app.id}
-      $isFullscreen={state.isFullScreen}
+      $isFocus={isFocus}
+      $isFullscreen={app.isFullscreen}
       position={state.position}
       size={state.size}
       minWidth={WINDOW.MIN_WIDTH}
       minHeight={WINDOW.MIN_HEIGHT}
-      disableDragging={state.isFullScreen}
-      enableResizing={!state.isFullScreen}
+      disableDragging={app.isFullscreen}
+      enableResizing={!app.isFullscreen}
       onMouseDown={onOpenApp}
       onResizeStart={onOpenApp}
       onDragStart={onDragStart}
       onDragStop={onDragStop}
       onResize={onResize}
     >
-      <WindowActionWrapper $isFullscreen={state.isFullScreen}>
+      <WindowActionWrapper $isFullscreen={app.isFullscreen}>
         <WindowActions
           onClose={onCloseApp}
           onMinimize={onMinimize}
-          onStretch={onToggleFullScreen}
+          onStretch={onFullScreen}
         />
       </WindowActionWrapper>
-      <ContentWrapper ref={contentRef} $isFullscreen={state.isFullScreen}>
+      <ContentWrapper ref={contentRef} $isFullscreen={app.isFullscreen}>
         {children}
       </ContentWrapper>
     </WindowContainer>
   );
 };
 
-export default Window;
+export default React.memo(Window);
 
 const useListenUnMinimized = (
   app: App,

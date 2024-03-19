@@ -13,7 +13,6 @@ export enum WindowActionKind {
 interface WindowState {
   size: Props["size"];
   position: Props["position"];
-  isFullScreen: boolean;
 }
 
 type WindowActions =
@@ -73,7 +72,6 @@ function reducer(state: WindowState, action: WindowActions): WindowState {
     case WindowActionKind.EXIT_FULLSCREEN:
       return {
         ...state,
-        isFullScreen: false,
         size: action.payload.prevSize,
         position: action.payload.prevPosition,
       };
@@ -81,7 +79,6 @@ function reducer(state: WindowState, action: WindowActions): WindowState {
     case WindowActionKind.ENTER_FULLSCREEN:
       return {
         ...state,
-        isFullScreen: true,
         size: {
           width: "100vw",
           height: `100vh`,
@@ -104,6 +101,5 @@ export default function useWindowReducer() {
       x: window.innerWidth / 2 - WINDOW.DEFAULT_SIZE.width / 2,
       y: window.innerHeight / 2 - WINDOW.DEFAULT_SIZE.height / 2,
     },
-    isFullScreen: false,
   });
 }
