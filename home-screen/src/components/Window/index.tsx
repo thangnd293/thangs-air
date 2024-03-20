@@ -133,7 +133,6 @@ const Window: React.FC<WindowProps> = ({
     });
 
     addZoomInEffect(el, dockEl);
-
     minimizeApp(app.id, screenshot);
   };
 

@@ -29,9 +29,14 @@ export function addZoomInEffect(el: HTMLElement, dockEl: HTMLElement) {
 
   el.style.left = `${left}px`;
   el.style.top = `${top}px`;
+
+  setTimeout(() => {
+    el.style.visibility = "hidden";
+  }, 600);
 }
 
 export function addZoomOutEffect(el: HTMLElement) {
+  el.style.visibility = "visible";
   el.style.transition = generateTransition({
     attrs: ["width", "height", "transform", "opacity", "left", "top"],
     duration: "0.6s",

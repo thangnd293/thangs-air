@@ -1,7 +1,6 @@
 import { MENU_BAR_HEIGHT } from "@/constant";
 import { App, useDesktopStore } from "@/stores/desktop";
 import Dock from "@components/Dock";
-import { images } from "@components/Images";
 import Window from "@components/Window";
 import React from "react";
 import styled from "styled-components";
@@ -31,7 +30,7 @@ const Desktop = () => {
       {openAppList.map((app) => (
         <Window
           key={app.id}
-          isFocus={currentApp.id === app.id}
+          isFocus={currentApp?.id === app.id}
           stackIndex={calcStackIndex(app)}
           app={app}
         >
@@ -46,9 +45,8 @@ const Desktop = () => {
 export default Desktop;
 
 const DesktopContainer = styled.div`
-  height: calc(100vh - ${MENU_BAR_HEIGHT}px);
+  height: calc(100% - ${MENU_BAR_HEIGHT}px);
   width: 100%;
   margin-top: ${MENU_BAR_HEIGHT}px;
   overflow: hidden;
-  background: lightblue url(${images.wallpaper}) no-repeat fixed center;
 `;

@@ -34,6 +34,10 @@ const useIsVisibleHeader = (enable: boolean) => {
   const [isVisible, setIsVisible] = useState(!enable);
 
   useEffect(() => {
+    setIsVisible(!enable);
+  }, [enable]);
+
+  useEffect(() => {
     if (!enable) return;
 
     const handleMouseMove = (e: MouseEvent) => {
