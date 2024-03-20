@@ -109,10 +109,22 @@ export const useDesktopStore = create<DesktopState>((set, get) => ({
     }));
   },
   openFullscreen: (id) => {
+    const { openAppList } = get();
+
+    const app = openAppList.find((app) => app.id === id);
+
+    if (!app) return;
+
+    const newApp = { ...app, isFullscreen: true };
+
     set((state) => ({
       openAppList: state.openAppList.map((app) =>
-        app.id === id ? { ...app, isFullscreen: true } : app
+        app.id === newApp.id ? newApp : app
       ),
+      currentAppConnext: [
+        newApp,
+        ...state.currentAppConnext.filter((app) => app.id !== newApp.id),
+      ],
     }));
   },
   exitFullscreen: (id) => {

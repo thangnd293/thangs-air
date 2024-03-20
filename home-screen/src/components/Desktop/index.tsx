@@ -1,5 +1,5 @@
 import { MENU_BAR_HEIGHT } from "@/constant";
-import { useDesktopStore } from "@/stores/desktop";
+import { App, useDesktopStore } from "@/stores/desktop";
 import Dock from "@components/Dock";
 import { images } from "@components/Images";
 import Window from "@components/Window";
@@ -8,17 +8,33 @@ import styled from "styled-components";
 import { useShallow } from "zustand/react/shallow";
 
 const Desktop = () => {
-  const { currentApp, openAppList } = useDesktopStore(
+  const { currentApp, openAppList, currentAppConnext } = useDesktopStore(
     useShallow((state) => ({
       openAppList: state.openAppList,
       currentApp: state.currentAppConnext[0],
+      currentAppConnext: state.currentAppConnext,
     }))
   );
+
+  const calcStackIndex = (app: App) => {
+    return (
+      Math.abs(
+        currentAppConnext.findIndex((a) => a.id === app.id) -
+          currentAppConnext.length +
+          1
+      ) + 1
+    );
+  };
 
   return (
     <DesktopContainer id="desktop">
       {openAppList.map((app) => (
-        <Window key={app.id} isFocus={currentApp.id === app.id} app={app}>
+        <Window
+          key={app.id}
+          isFocus={currentApp.id === app.id}
+          stackIndex={calcStackIndex(app)}
+          app={app}
+        >
           {app.component}
         </Window>
       ))}

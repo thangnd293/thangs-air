@@ -19,11 +19,17 @@ import {
 
 interface WindowProps {
   app: App;
+  stackIndex: number;
   isFocus?: boolean;
   children: React.ReactNode;
 }
 
-const Window: React.FC<WindowProps> = ({ app, isFocus, children }) => {
+const Window: React.FC<WindowProps> = ({
+  app,
+  stackIndex,
+  isFocus,
+  children,
+}) => {
   const { openApp, closeApp, minimizeApp, openFullscreen, exitFullscreen } =
     useDesktopStore(
       useShallow((state) => ({
@@ -138,10 +144,11 @@ const Window: React.FC<WindowProps> = ({ app, isFocus, children }) => {
 
   return (
     <WindowContainer
+      $isFocus={isFocus}
+      $stackIndex={stackIndex}
+      $isFullscreen={app.isFullscreen}
       ref={rndRef}
       bounds="#desktop"
-      $isFocus={isFocus}
-      $isFullscreen={app.isFullscreen}
       position={state.position}
       size={state.size}
       minWidth={WINDOW.MIN_WIDTH}

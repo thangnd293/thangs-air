@@ -5,12 +5,13 @@ import styled, { css } from "styled-components";
 export const WindowContainer = styled(Rnd)<{
   $isFocus: boolean;
   $isFullscreen: boolean;
+  $stackIndex: number;
 }>`
   overflow: hidden;
 
   box-shadow: rgba(0, 0, 0, 0.45) 0px 10px 30px 2px;
 
-  z-index: ${({ $isFocus }) => ($isFocus ? 1 : 0)};
+  z-index: ${({ $stackIndex }) => $stackIndex};
 
   border: ${({ $isFullscreen }) =>
     $isFullscreen ? "none" : "1px solid rgba(255, 255, 255, 0.3)"};
@@ -19,7 +20,6 @@ export const WindowContainer = styled(Rnd)<{
   ${({ $isFocus }) =>
     $isFocus &&
     css`
-      z-index: "1";
       box-shadow: rgba(0, 0, 0, 0.65) 0px 10px 30px 2px;
       border-color: rgba(255, 255, 255, 0.4);
     `}
