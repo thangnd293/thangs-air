@@ -1,9 +1,9 @@
 import React from "react";
+import styled from "styled-components";
 import Desktop from "./components/Desktop";
 import Header from "./components/Header";
-import SwitchApps from "./components/SwitchApps";
-import styled from "styled-components";
 import { images } from "./components/Images";
+import SwitchApps from "./components/SwitchApps";
 
 const App = () => {
   return (

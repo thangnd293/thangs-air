@@ -8,6 +8,8 @@ import { takeScreenShot } from "@/utils/function";
 import WindowActions from "../WindowActions";
 import { ContentWrapper, WindowActionWrapper, WindowContainer } from "./styles";
 import useWindowReducer, { WindowActionKind } from "./useWindowReducer";
+import ScrollArea from "../ScrollArea";
+
 import {
   addZoomInEffect,
   addZoomOutEffect,
@@ -167,9 +169,11 @@ const Window: React.FC<WindowProps> = ({
           onStretch={onFullScreen}
         />
       </WindowActionWrapper>
-      <ContentWrapper ref={contentRef} $isFullscreen={app.isFullscreen}>
-        {children}
-      </ContentWrapper>
+      <ScrollArea ref={contentRef}>
+        <ContentWrapper $isFullscreen={app.isFullscreen}>
+          {children}
+        </ContentWrapper>
+      </ScrollArea>
     </WindowContainer>
   );
 };
