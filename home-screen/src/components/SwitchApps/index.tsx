@@ -33,6 +33,7 @@ const SwitchApps = () => {
       {currentAppConnext.map((app, index) => (
         <AppIcon
           key={app.id}
+          name={app.name}
           shortcut={app.shortcut}
           isSelected={currentIndex === index}
           onSelect={() => setCurrentIndex(index)}
@@ -59,7 +60,7 @@ const useSwitchAppsState = ({
     if (!maxLength) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "q" && e.altKey) {
+      if (e.key === "q" && (e.altKey || e.ctrlKey)) {
         const increment = isVisible ? 1 : 0;
         setIsVisible(true);
 
@@ -78,7 +79,7 @@ const useSwitchAppsState = ({
 
   useEffect(() => {
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.key === "Alt") {
+      if (e.key === "Alt" || e.key === "Control") {
         setIsVisible(false);
         onSelect(currentIndex);
 
@@ -104,9 +105,9 @@ const SwitchAppContainer = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
+  padding: 20px 18px;
   gap: 10px;
-  background-color: #f9f9f9;
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: 1px solid #f9f9f9;
+  border-radius: 22px;
+  background-color: rgba(94, 94, 95, 0.35);
+  backdrop-filter: blur(20px);
 `;

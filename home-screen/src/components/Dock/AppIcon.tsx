@@ -27,6 +27,7 @@ const AppIcon: React.FC<AppIconProps> = ({ app }) => {
 export default AppIcon;
 
 const AppIconContainer = styled.button<{ $shortcut: string; $isOpen: boolean }>`
+  position: relative;
   box-sizing: content-box;
   width: 54px;
   height: 55px;
@@ -43,6 +44,17 @@ const AppIconContainer = styled.button<{ $shortcut: string; $isOpen: boolean }>`
   ${({ $isOpen }) =>
     $isOpen &&
     css`
-      background-color: rebeccapurple;
+      &::before {
+        content: "";
+        display: block;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgb(173, 164, 194);
+      }
     `}
 `;
