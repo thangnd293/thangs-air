@@ -1,7 +1,17 @@
+@font-face {
+  font-family: SF-Pro;
+  src: url(../public/SF-Pro-Text-Regular.otf);
+}
+
+:root {
+  --border-color: hsla(0, 0%, 100%, 0.335);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: SF-Pro, sans-serif;
 }
 
 body {
