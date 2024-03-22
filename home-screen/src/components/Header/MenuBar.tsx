@@ -20,6 +20,7 @@ const MenuBarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   height: ${MENU_BAR_HEIGHT}px;
-  padding: 2px 20px;
-  background-color: aliceblue;
+  padding: 0 4px;
+  background-color: rgba(0, 0, 0, 0.19);
+  backdrop-filter: blur(100px);
 `;

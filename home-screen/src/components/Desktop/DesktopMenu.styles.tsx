@@ -14,10 +14,6 @@ const menuItem = css`
   outline: none;
   color: white;
 
-  &[data-state="open"] {
-    background-color: #657381;
-  }
-
   &:hover {
     background-color: #0a85ff;
   }
@@ -49,6 +45,10 @@ export const ContextMenuItem = styled(ContextMenu.Item)`
 
 export const ContextMenuSubTrigger = styled(ContextMenu.SubTrigger)`
   ${menuItem}
+
+  &[data-state="open"] {
+    background-color: #657381;
+  }
 `;
 
 export const ContextMenuSeparator = styled(ContextMenu.Separator)`

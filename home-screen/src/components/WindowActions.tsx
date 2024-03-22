@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import CloseIcon from "./Icons/CloseIcon";
-import MinimizeIcon from "./Icons/MinimizeIcon";
-import StretchIcon from "./Icons/StretchIcon";
+import { CloseIcon, MinimizeIcon, StretchIcon } from "@/assets/icons";
 
 interface WindowActionsProps {
   onClose?: () => void;
