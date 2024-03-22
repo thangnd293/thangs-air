@@ -1,7 +1,7 @@
 import * as React from "react";
 import { SVGProps } from "react";
 
-const StretchIcon = (props: SVGProps<SVGSVGElement>) => (
+export const StretchIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 13 13"
     xmlns="http://www.w3.org/2000/svg"

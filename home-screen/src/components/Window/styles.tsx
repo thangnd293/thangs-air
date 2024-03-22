@@ -1,7 +1,6 @@
 import { WINDOW } from "@/constant";
 import { Rnd } from "react-rnd";
 import styled, { css } from "styled-components";
-import ScrollArea from "../ScrollArea";
 
 export const WindowContainer = styled(Rnd)<{
   $isFocus: boolean;
@@ -35,7 +34,7 @@ export const WindowActionWrapper = styled.div<{
   background-color: #f0f0f0;
 `;
 
-export const ContentWrapper = styled(ScrollArea)<{
+export const ContentWrapper = styled.div<{
   $isFullscreen: boolean;
 }>`
   height: ${({ $isFullscreen }) =>

@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import Desktop from "./components/Desktop";
 import Header from "./components/Header";
-import { images } from "./components/Images";
 import SwitchApps from "./components/SwitchApps";
+import { images } from "./assets/images";
 
 const App = () => {
   return (
@@ -21,6 +21,7 @@ const AppContainer = styled.div`
   width: 100%;
   height: 100vh;
   background: lightblue url(${images.wallpaper}) no-repeat fixed center;
+  background-size: cover;
 `;
 
 export default App;

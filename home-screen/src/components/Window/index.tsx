@@ -5,7 +5,7 @@ import { useShallow } from "zustand/react/shallow";
 import { WINDOW } from "@/constant";
 import { App, useDesktopStore } from "@/stores/desktop";
 import { takeScreenShot } from "@/utils/function";
-import ScrollArea from "../ScrollArea";
+import ScrollArea from "../ui/ScrollArea";
 import WindowActions from "../WindowActions";
 import { ContentWrapper, WindowActionWrapper, WindowContainer } from "./styles";
 import useWindowReducer, { WindowActionKind } from "./useWindowReducer";

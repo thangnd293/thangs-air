@@ -1,5 +1,5 @@
+import { images } from "@/assets/images";
 import FinderApp from "@/components/FinderApp";
-import { images } from "@/components/Images";
 import NotesApp from "@/components/NotesApp";
 import RemindersApp from "@/components/RemindersApp";
 import React from "react";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { SVGProps } from "react";
 
-const MinimizeIcon = (props: SVGProps<SVGSVGElement>) => (
+export const MinimizeIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     width={6}
     height={1}

@@ -1,4 +1,4 @@
-import { images } from "@/components/Images";
+import { images } from "@/assets/images";
 import html2canvas, { Options } from "html2canvas";
 
 export const takeScreenShot = (
