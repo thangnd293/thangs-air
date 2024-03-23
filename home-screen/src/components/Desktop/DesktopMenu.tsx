@@ -38,7 +38,7 @@ const DesktopMenu: React.FC<PropsWithChildren> = ({ children }) => {
             </ContextMenuSubTrigger>
 
             <ContextMenu.Portal>
-              <ContextMenuSubContent>
+              <ContextMenuSubContent alignOffset={-5}>
                 <ContextMenu.RadioGroup value="none">
                   {sortByOptions.map((option) => (
                     <Fragment key={option.value}>
