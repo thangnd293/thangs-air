@@ -3,9 +3,9 @@ import styled, { css } from "styled-components";
 
 const dropdownMenuContentStyles = css`
   min-width: 220px;
-  background-color: rgba(0, 0, 0, 0.19);
-  backdrop-filter: blur(15px);
-  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(100px);
+  border-radius: 6px;
   border: 1px solid var(--border-color);
   padding: 5px;
   box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35),
@@ -16,17 +16,20 @@ const dropdownMenuItemStyles = css`
   font-size: 13px;
   line-height: 1;
   color: white;
-  border-radius: 3px;
   display: flex;
   align-items: center;
-  height: 25px;
-  padding: 2px 10px;
+  padding: 4px 8px;
+  border-radius: 3px;
   position: relative;
   user-select: none;
   outline: none;
 
   &[data-highlighted] {
-    background-color: #0a85ff;
+    background-color: var(--item-highlight-bg);
+  }
+
+  & ~ & {
+    margin-top: 1px;
   }
 `;
 
@@ -59,17 +62,10 @@ const DropdownMenuSubTrigger = styled(DropdownMenu.SubTrigger)`
   }
 `;
 
-const DropdownMenuLabel = styled(DropdownMenu.Item)`
-  padding-left: 25px;
-  font-size: 12px;
-  line-height: 25px;
-  color: #666;
-`;
-
 const DropdownMenuSeparator = styled(DropdownMenu.Separator)`
   height: 1px;
   background-color: var(--border-color);
-  margin: 5px;
+  margin: 5px 8px;
 `;
 
 const DropdownMenuItemIndicator = styled(DropdownMenu.ItemIndicator)`
@@ -88,7 +84,7 @@ const DropdownMenuArrow = styled(DropdownMenu.Arrow)`
 const RightSlot = styled.div`
   margin-left: auto;
   padding-left: 20px;
-  color: #666;
+  color: #999;
 `;
 
 const DropdownMenuRoot = DropdownMenu.Root;
@@ -104,7 +100,6 @@ export {
   DropdownMenuCheckboxItem,
   DropdownMenuRadioItem,
   DropdownMenuSubTrigger,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItemIndicator,
   DropdownMenuArrow,

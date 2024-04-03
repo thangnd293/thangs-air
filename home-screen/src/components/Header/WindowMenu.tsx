@@ -9,6 +9,7 @@ import {
   RightSlot,
 } from "../ui/DropdownMenu";
 import { MenuButton } from "./styles";
+import styled from "styled-components";
 
 const WindowMenu = () => {
   return (
@@ -18,7 +19,7 @@ const WindowMenu = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuPortal>
-        <DropdownMenuContent sideOffset={1} align="start">
+        <DropdownMenuContentStyled sideOffset={1} align="start">
           <DropdownMenuItem>
             Minimize <RightSlot>⌘M</RightSlot>
           </DropdownMenuItem>
@@ -38,10 +39,14 @@ const WindowMenu = () => {
           <DropdownMenuItem>Show Progress Window</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Bring All to Front</DropdownMenuItem>
-        </DropdownMenuContent>
+        </DropdownMenuContentStyled>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   );
 };
 
 export default WindowMenu;
+
+const DropdownMenuContentStyled = styled(DropdownMenuContent)`
+  width: 302px;
+`;

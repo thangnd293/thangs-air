@@ -5,6 +5,7 @@
 
 :root {
   --border-color: hsla(0, 0%, 100%, 0.335);
+  --item-highlight-bg: rgb(26, 101, 188);
 }
 
 * {

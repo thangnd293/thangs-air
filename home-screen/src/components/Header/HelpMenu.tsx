@@ -17,7 +17,7 @@ const HelpMenu = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuPortal>
-        <DropdownMenuContent sideOffset={1} align="start">
+        <DropdownMenuContentStyled sideOffset={1} align="start">
           <DropdownMenuItem asChild>
             <SearchInput
               onClick={(e) => e.preventDefault()}
@@ -28,7 +28,7 @@ const HelpMenu = () => {
 
           <DropdownMenuItem>Tips for Your Mac</DropdownMenuItem>
           <DropdownMenuItem>macOS Help</DropdownMenuItem>
-        </DropdownMenuContent>
+        </DropdownMenuContentStyled>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   );
@@ -36,13 +36,19 @@ const HelpMenu = () => {
 
 export default HelpMenu;
 
+const DropdownMenuContentStyled = styled(DropdownMenuContent)`
+  width: 360px;
+`;
+
 const SearchInput = styled.input`
   width: 100%;
-  padding: 4px 14px;
-  margin-bottom: 4px;
+  padding: 1px 8px;
+  margin-bottom: 7px;
   border-radius: 4px;
-  border: 1px solid var(--border-color);
-  outline: none;
+  border: none;
+  outline: var(--border-color);
+  outline-style: inset;
+  outline-width: 1px;
   font-size: 14px;
   background-color: rgba(255, 255, 255, 0.1);
   color: white;

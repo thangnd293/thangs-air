@@ -11,7 +11,7 @@ export const MenuButton = styled.button`
   align-items: center;
   background-color: transparent;
   color: white;
-  font-size: 14px;
+  font-size: 13px;
 
   &[data-state="open"] {
     background-color: #f5f5f53b;

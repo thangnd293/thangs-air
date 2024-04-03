@@ -109,5 +109,5 @@ const SwitchAppContainer = styled.div`
   gap: 10px;
   border-radius: 22px;
   background-color: rgba(94, 94, 95, 0.35);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(100px);
 `;

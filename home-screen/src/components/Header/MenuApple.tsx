@@ -27,7 +27,7 @@ const MenuApple = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuPortal>
-        <DropdownMenuContent sideOffset={1} align="start">
+        <DropdownMenuContentStyled sideOffset={1} align="start">
           <DropdownMenuItem>About This Mac</DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -46,9 +46,7 @@ const MenuApple = () => {
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent sideOffset={2} alignOffset={-5}>
-                <DropdownMenuItem>
-                  Save Page As… <RightSlot>⌘+S</RightSlot>
-                </DropdownMenuItem>
+                <DropdownMenuItem>Save Page As…</DropdownMenuItem>
                 <DropdownMenuItem>Create Shortcut…</DropdownMenuItem>
                 <DropdownMenuItem>Name Window…</DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -60,7 +58,7 @@ const MenuApple = () => {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem>
-            Force Quit... <RightSlot>⌘+B</RightSlot>
+            Force Quit... <RightSlot>⌥⌘⎋</RightSlot>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -71,12 +69,12 @@ const MenuApple = () => {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem>
-            Lock Screen <RightSlot>⌘+B</RightSlot>
+            Lock Screen <RightSlot>⌃⌘Q</RightSlot>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Log Out Thang Nguyen... <RightSlot>⌘+B</RightSlot>
+            Log Out Thang Nguyen... <RightSlot>⇧⌘Q</RightSlot>
           </DropdownMenuItem>
-        </DropdownMenuContent>
+        </DropdownMenuContentStyled>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   );
@@ -84,9 +82,15 @@ const MenuApple = () => {
 
 export default MenuApple;
 
+const DropdownMenuContentStyled = styled(DropdownMenuContent)`
+  width: 270px;
+`;
+
 const AppleIcon = styled.div`
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+  margin-bottom: 1px;
+  margin-left: -2px;
   background: url(${images.appleSmall}) no-repeat center center;
   background-size: contain;
   background-color: transparent;

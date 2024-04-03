@@ -5,13 +5,14 @@ export function preventAnimate(el: HTMLElement) {
   el.style.transition = "none";
 }
 
+const animateTime = 300;
 export function addZoomInEffect(el: HTMLElement, dockEl: HTMLElement) {
   const elClientRect = el.getBoundingClientRect();
   const dockClientRect = dockEl.getBoundingClientRect();
 
   el.style.transition = generateTransition({
     attrs: ["width", "height", "transform", "opacity", "left", "top"],
-    duration: "0.6s",
+    duration: `${animateTime}ms`,
   });
 
   el.style.transform = el.style.transform + WINDOW.SCALE_MINIMIZE;
@@ -32,14 +33,14 @@ export function addZoomInEffect(el: HTMLElement, dockEl: HTMLElement) {
 
   setTimeout(() => {
     el.style.visibility = "hidden";
-  }, 600);
+  }, animateTime);
 }
 
 export function addZoomOutEffect(el: HTMLElement) {
   el.style.visibility = "visible";
   el.style.transition = generateTransition({
     attrs: ["width", "height", "transform", "opacity", "left", "top"],
-    duration: "0.6s",
+    duration: `${animateTime}ms`,
   });
 
   const detectTranslate = /translate\(\d*\.?\d*px, \d*\.?\d*px\)/;

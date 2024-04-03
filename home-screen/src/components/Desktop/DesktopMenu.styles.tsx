@@ -5,9 +5,9 @@ const menuItem = css`
   position: relative;
   display: flex;
   align-items: center;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 13px;
   cursor: pointer;
   user-select: none;
   border: none;
@@ -15,18 +15,18 @@ const menuItem = css`
   color: white;
 
   &:hover {
-    background-color: #0a85ff;
+    background-color: var(--item-highlight-bg);
   }
 `;
 
 const menuContent = css`
-  min-width: 220px;
+  min-width: 180px;
   background-color: rgba(0, 0, 0, 0.19);
-  backdrop-filter: blur(15px);
-  border-radius: 8px;
+  backdrop-filter: blur(100px);
+  border-radius: 6px;
   border: 1px solid var(--border-color);
   overflow: hidden;
-  padding: 5px;
+  padding: 4px;
   box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35),
     0px 10px 20px -15px rgba(22, 23, 24, 0.2);
 `;
@@ -37,6 +37,7 @@ export const ContextMenuContent = styled(ContextMenu.Content)`
 
 export const ContextMenuSubContent = styled(ContextMenu.SubContent)`
   ${menuContent}
+  min-width: unset;
 `;
 
 export const ContextMenuItem = styled(ContextMenu.Item)`
@@ -47,19 +48,19 @@ export const ContextMenuSubTrigger = styled(ContextMenu.SubTrigger)`
   ${menuItem}
 
   &[data-state="open"] {
-    background-color: #657381;
+    background-color: rgba(255, 255, 255, 0.15);
   }
 `;
 
 export const ContextMenuSeparator = styled(ContextMenu.Separator)`
   height: 1px;
   background-color: var(--border-color);
-  margin: 5px;
+  margin: 6px;
 `;
 
 export const ContextMenuRadioItem = styled(ContextMenu.RadioItem)`
   ${menuItem}
-  padding: 6px 18px;
+  padding: 3px 18px;
 `;
 
 export const ContextMenuItemIndicator = styled(ContextMenu.ItemIndicator)`
@@ -73,6 +74,7 @@ export const ContextMenuItemIndicator = styled(ContextMenu.ItemIndicator)`
 
 export const RightSlot = styled.div`
   margin-left: auto;
+  margin-right: -5px;
   padding-left: 20px;
   color: #fff;
 `;
