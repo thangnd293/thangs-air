@@ -6,8 +6,8 @@ import {
   DropdownMenuPortal,
   DropdownMenuRoot,
   DropdownMenuTrigger,
-} from "../ui/DropdownMenu";
-import { MenuButton } from "./styles";
+} from "../../ui/DropdownMenu";
+import { MenuButton } from "../styles";
 
 const HelpMenu = () => {
   return (

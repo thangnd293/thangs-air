@@ -14,8 +14,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   RightSlot,
-} from "../ui/DropdownMenu";
-import { MenuButton } from "./styles";
+} from "../../ui/DropdownMenu";
+import { MenuButton } from "../styles";
 
 const MenuApple = () => {
   return (

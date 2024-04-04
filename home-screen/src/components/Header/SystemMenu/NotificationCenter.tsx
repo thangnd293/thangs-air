@@ -18,5 +18,5 @@ const DateTime = () => {
     setTime(new Date());
   }, 1000);
 
-  return <>{time.toLocaleDateString()}</>;
+  return <>{time.formatDate()}</>;
 };

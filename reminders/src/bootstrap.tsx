@@ -2,8 +2,6 @@ import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 
-let root: ReactDOM.Root = null;
-
 if (process.env.NODE_ENV === "development") {
   const rootEl = document.getElementById("_reminder-root");
   if (rootEl) {
@@ -12,7 +10,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export function render(rootEl: HTMLElement) {
-  if (!root) root = ReactDOM.createRoot(rootEl);
+  const root = ReactDOM.createRoot(rootEl);
 
   root.render(
     <StrictMode>

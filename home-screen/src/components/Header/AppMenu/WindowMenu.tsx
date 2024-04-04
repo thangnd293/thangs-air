@@ -7,8 +7,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   RightSlot,
-} from "../ui/DropdownMenu";
-import { MenuButton } from "./styles";
+} from "../../ui/DropdownMenu";
+import { MenuButton } from "../styles";
 import styled from "styled-components";
 
 const WindowMenu = () => {

@@ -4,7 +4,7 @@ import Desktop from "./components/Desktop";
 import Header from "./components/Header";
 import SwitchApps from "./components/SwitchApps";
 import { images } from "./assets/images";
-// import "@utils/prototype";
+import "@utils/prototype";
 
 const App = () => {
   return (

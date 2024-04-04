@@ -21,6 +21,6 @@ const MenuBarContainer = styled.div`
   justify-content: space-between;
   height: ${MENU_BAR_HEIGHT}px;
   padding: 0 6px;
-  background-color: rgba(0, 0, 0, 0.19);
+  background-color: rgba(34, 33, 33, 0.55);
   backdrop-filter: blur(100px);
 `;
